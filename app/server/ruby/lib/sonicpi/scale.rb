@@ -306,9 +306,15 @@ module SonicPi
     attr_reader :name, :tonic, :num_octaves, :notes
 
     def initialize(tonic, name, num_octaves=1)
-      name = name.to_sym
-      intervals = SCALE[name]
+      if name.is_a?(Array)
+        intervals = name
+        name = :custom
+      else
+        name = name.to_sym
+        intervals = SCALE[name]
+      end
       raise InvalidScaleError, "Unknown scale name: #{name.inspect}" unless intervals
+	    
       intervals = intervals * num_octaves
       current = Note.resolve_midi_note(tonic)
       res = [current]
