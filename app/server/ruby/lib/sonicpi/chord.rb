@@ -125,8 +125,15 @@ module SonicPi
 
     def initialize(tonic, name, num_octaves=1)
       num_octaves = 1 unless num_octaves
-      name = name.to_sym
-      intervals = CHORD_LOOKUP[name]
+      
+      if name.is_a?(Array)
+        intervals = name
+        name = :custom
+      else
+        name = name.to_sym
+        intervals = CHORD_LOOKUP[name]
+      end
+      
       raise "Unknown chord name: #{name.inspect}" unless intervals
 
       tonic = Note.resolve_midi_note_without_octave(tonic)
